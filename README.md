@@ -44,12 +44,15 @@ PyTorch implementation for multimodal audio generation and editing: generate or 
 ---
 
 ## 📰 News
+- **2025.07** &nbsp; 📦 Simplified installation and usability: dependencies on PyPI for easy cross-platform setup; Windows .bat scripts automate environment creation and script running.
+- **2025.07** &nbsp;  🔧 Major update: model lightweighted and optimized memory and GPU usage, now supports high-throughput audio generation at scale!
 - **2025.07** &nbsp; 🔥Online demo on [Hugging Face Spaces](https://huggingface.co/spaces/FunAudioLLM/ThinkSound) and [ModelScope](https://modelscope.cn/studios/iic/ThinkSound) for interactive experience!
 - **2025.07** &nbsp; 🔥Released inference scripts and web interface; 
 - **2025.06** &nbsp; 🔥[ThinkSound paper](https://arxiv.org/pdf/2506.21448) released on arXiv!
 - **2025.06** &nbsp; 🔥[Online Demo](http://thinksound-project.github.io/) is live - try it now!
 
 ---
+
 
 ## 🚀 Features
 
@@ -81,23 +84,73 @@ ThinkSound decomposes audio generation and editing into three interactive stages
 ```bash
 git clone https://github.com/liuhuadai/ThinkSound.git
 cd ThinkSound
-pip install -r requirements.txt
+conda create -n thinksound python=3.10
+pip install thinksound
 conda install -y -c conda-forge 'ffmpeg<7'
 # Download pretrained weights https://huggingface.co/liuhuadai/ThinkSound to Directory ckpts/
 # model weights can be also downloaded from https://www.modelscope.cn/models/iic/ThinkSound
 git lfs install
 git clone https://huggingface.co/liuhuadai/ThinkSound ckpts
+# To improve inference and training speed, you may optionally install a FlashAttention backend compatible with your system and PyTorch version.
 ```
 
-**Make it executable**
+> ✅ **Windows Tip:**  
+> Windows users can simply run setup_windows.bat (or double-click it) to automatically create the conda environment, install all dependencies (including FFmpeg), and download the pretrained model — no manual setup required. Make sure conda and git are installed and available in your system PATH before running the script.
+> ```
+
+### ▶️ Run the Demo
+
+#### **Linux/macOS**
+
 ```bash
+conda activate thinksound
 chmod +x scripts/demo.sh
+./scripts/demo.sh <path-to-your-demo-video> <title> <CoT description> [use-half]
 ```
 
-**Run the script**
+#### **Windows**
+
+You can use the provided `.bat` script instead:
+
 ```bash
-./scripts/demo.sh <video_path> <caption> <CoT description>
+conda activate thinksound
+.\scripts\demo.bat <path-to-your-demo-video> <title> <CoT description> [use-half]
 ```
+
+**Note:**
+
+* `<path-to-your-demo-video>`: The path to a single video
+* `[use-half]` (optional): Add use-half at the end to enable half precision feature extraction.
+
+---
+
+### 📦 Batch Inference
+
+#### **Linux/macOS**
+
+```bash
+conda activate thinksound
+chmod +x scripts/eval_batch.sh
+./scripts/eval_batch.sh <video_path> <csv_path> <save_path (optional)> [use-half]
+```
+
+#### **Windows**
+
+Use the equivalent `.bat` script:
+
+```bash
+conda activate thinksound
+.\scripts\eval_batch.bat <video_path> <csv_path> <save_path (optional)> [use-half]
+```
+
+**Note:**
+
+* `<video_path>`: Path to the root directory containing all .mp4 videos to be processed (all videos must be of equal duration).
+* `<csv_path>`: A CSV file with text prompts for each video (see `demo_test.csv` for format).
+* `<save_path>` (optional): Where to save generated audio. Defaults to `results/features`.
+* `[use-half]` (optional): Add use-half at the end to enable half precision feature extraction.
+
+---
 
 
 ### Web Interface Usage
@@ -111,23 +164,42 @@ python app.py
 ---
 
 ## 📝 TODO
-
-- ☐ Release training scripts for ThinkSound models
-- ☐ Open-source AudioCoT dataset and automated pipeline
-- ☐ Provide detailed documentation and API reference
-- ☐ Add support for additional modalities and downstream tasks
-
+* - [ ] Release training scripts for ThinkSound models
+* - [ ] Open-source AudioCoT dataset and automated pipeline
+* - [ ] Provide detailed documentation and API reference
+* - [ ] Add support for additional modalities and downstream tasks
+* - [ ] Release models at different scales
+* - [ ] Provide a ready-to-use environment image
+* - [x] A beginner-friendly Windows quick-start README
 ---
 
 ## 📄 License
 
-This project is released under the [Apache 2.0 License](LICENSE).
+This project is released under the Apache 2.0 License.
 
-> **Note:**  
-> The code, models, and dataset are **for research and educational purposes only**.  
+> **Note:**
+> The code, models, and dataset are **for research and educational purposes only**.
 > **Commercial use is NOT permitted.**
->
 > For commercial licensing, please contact the authors.
+
+### 📦 Third-Party Components
+
+* **Stable Audio Open VAE** (by Stability AI):
+  This repository includes a fine-tuned VAE from [Stable Audio Open](https://huggingface.co/stabilityai/stable-audio-open-1.0/), licensed under the [Stability AI Community License](./third_party/LICENSE_StabilityAI.md).
+  **Commercial use and redistribution require prior permission from Stability AI.**
+
+* 📘 **All other code and models** are released under the Apache License 2.0.
+
+---
+
+## 🙏 Acknowledgements
+
+We thank the following open-source projects:
+
+* **Stable Audio Open & stable-audio-tools** (by Stability AI):
+  For the VAE module and audio processing utilities.
+* **MMAudio**:
+  For the MM-DiT backbone used in our multi-modal design.
 
 ---
 
