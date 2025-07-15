@@ -170,7 +170,7 @@ python app.py
 * - [ ] Add support for additional modalities and downstream tasks
 * - [ ] Release models at different scales
 * - [ ] Provide a ready-to-use environment image
-- [x] A beginner-friendly Windows quick-start README
+* - [x] A beginner-friendly Windows quick-start README
 ---
 
 ## 📄 License
